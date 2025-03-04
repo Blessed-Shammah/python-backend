@@ -1,0 +1,52 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Finder</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Email Finder</h1>
+    <form method="POST">
+        <label>Domain: <input type="text" name="domain" placeholder="e.g., x.com" required></label><br><br>
+        <label>Company Name: <input type="text" name="company_name" placeholder="e.g., X" required></label><br><br>
+        <button type="submit">Find Emails</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if results %}
+        <h2>Results for {{ results[0].company }}</h2>
+        <table>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Job Title</th>
+                <th>Company</th>
+            </tr>
+            {% for result in results %}
+                <tr>
+                    <td>{{ result.first_name }}</td>
+                    <td>{{ result.last_name }}</td>
+                    <td>{{ result.email }}</td>
+                    <td>{{ result.job_title }}</td>
+                    <td>{{ result.company }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% if csv_path %}
+            <p><a href="/download/{{ csv_path }}">Download CSV</a></p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
