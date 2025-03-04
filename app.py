@@ -3,17 +3,23 @@ from flask import Flask, request, render_template, send_file
 import requests
 import os
 import csv
-import io
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
-# Replace with your Hunter.io API key
-API_KEY = 'b538cbcd2729956736a570ff3ca0abaf0f16405b'
+# Access the API key from environment variables
+API_KEY = os.getenv('HUNTER_API_KEY')
 
 def find_emails(domain, company_name):
     """
     Fetch emails using Hunter.io API and return data for display or CSV.
     """
+    if not API_KEY:
+        return "API key not found. Please set HUNTER_API_KEY in your environment."
+    
     url = f'https://api.hunter.io/v2/domain-search?domain={domain}&api_key={API_KEY}'
     try:
         response = requests.get(url)
